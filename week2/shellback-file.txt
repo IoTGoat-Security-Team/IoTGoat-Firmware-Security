@@ -1,0 +1,1 @@
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/usr/bin/shellback: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-armhf.so.1, no section header

@@ -1,0 +1,12 @@
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/rc.d/S95shellback:4:PROG=/usr/bin/shellback
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/rc.d/S95shellback:32:	config_load 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/rc.d/S95shellback:33:	config_foreach start_instance 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/rc.d/S95shellback:37:	config_load 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/rc.d/S95shellback:38:	config_foreach stop_instance 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/config/shellback:1:config shellback shell_config
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/init.d/shellback:4:PROG=/usr/bin/shellback
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/init.d/shellback:32:	config_load 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/init.d/shellback:33:	config_foreach start_instance 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/init.d/shellback:37:	config_load 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/init.d/shellback:38:	config_foreach stop_instance 'shellback'
+/home/yuminjae/firmware-analysis-team-A/week1/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/etc/rc.local:4:/usr/bin/shellback &

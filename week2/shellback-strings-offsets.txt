@@ -1,0 +1,27 @@
+    114 /lib/ld-musl-armhf.so.1
+    381 libgcc_s.so.1
+    38f _init
+    395 __deregister_frame_info
+    3ad _fini
+    3b3 __register_frame_info
+    3c9 libc.so
+    3d1 fork
+    3d6 close
+    3dc htons
+    3e2 execve
+    3e9 accept
+    3f0 write
+    3f6 bind
+    3fb dup2
+    400 listen
+    407 socket
+    40e __libc_start_main
+    420 _edata
+    427 __bss_start
+    433 __bss_start__
+    441 __bss_end__
+    44d __end__
+    455 _end
+    45a _start_c
+    74c [***]Successfully Connected to IoTGoat's Backdoor[***]
+    784 /bin/busybox

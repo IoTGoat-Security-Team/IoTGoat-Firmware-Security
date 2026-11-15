@@ -1,0 +1,37 @@
+
+Elf file type is EXEC (Executable file)
+Entry point 0x10674
+There are 7 program headers, starting at offset 52
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  PHDR           0x000034 0x00010034 0x00010034 0x000e0 0x000e0 R E 0x4
+  INTERP         0x000114 0x00010114 0x00010114 0x00018 0x00018 R   0x1
+      [Requesting program interpreter: /lib/ld-musl-armhf.so.1]
+  LOAD           0x000000 0x00010000 0x00010000 0x00798 0x00798 R E 0x10000
+  LOAD           0x000f38 0x00020f38 0x00020f38 0x00107 0x00128 RW  0x10000
+  DYNAMIC        0x000f40 0x00020f40 0x00020f40 0x000c0 0x000c0 RW  0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10
+  GNU_RELRO      0x000f38 0x00020f38 0x00020f38 0x000c8 0x000c8 R   0x1
+
+Dynamic section at offset 0xf40 contains 19 entries:
+  Tag        Type                         Name/Value
+ 0x00000001 (NEEDED)                     Shared library: [libgcc_s.so.1]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so]
+ 0x0000000c (INIT)                       0x104cc
+ 0x0000000d (FINI)                       0x10734
+ 0x00000019 (INIT_ARRAY)                 0x20f38
+ 0x0000001b (INIT_ARRAYSZ)               4 (bytes)
+ 0x0000001a (FINI_ARRAY)                 0x20f3c
+ 0x0000001c (FINI_ARRAYSZ)               4 (bytes)
+ 0x00000004 (HASH)                       0x1012c
+ 0x00000005 (STRTAB)                     0x10380
+ 0x00000006 (SYMTAB)                     0x101e0
+ 0x0000000a (STRSZ)                      227 (bytes)
+ 0x0000000b (SYMENT)                     16 (bytes)
+ 0x00000015 (DEBUG)                      0x0
+ 0x00000003 (PLTGOT)                     0x21000
+ 0x00000002 (PLTRELSZ)                   104 (bytes)
+ 0x00000014 (PLTREL)                     REL
+ 0x00000017 (JMPREL)                     0x10464
+ 0x00000000 (NULL)                       0x0

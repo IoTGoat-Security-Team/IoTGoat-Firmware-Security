@@ -1,0 +1,9 @@
+    3d1 fork
+    3e2 execve
+    3e9 accept
+    3f6 bind
+    3fb dup2
+    400 listen
+    407 socket
+    74c [***]Successfully Connected to IoTGoat's Backdoor[***]
+    784 /bin/busybox
