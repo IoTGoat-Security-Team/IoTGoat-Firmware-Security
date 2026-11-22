@@ -1,0 +1,145 @@
+================================================================================
+OWASP IoTGoat 3주차 동적 분석 실습 통합 로그 (logs.txt)
+분석 대상: /usr/bin/shellback (ARM 32-bit ELF, Stripped)
+실습 환경: Ubuntu VM (qemu-arm-static + chroot + gdb-multiarch + nc + ss)
+================================================================================
+
+--------------------------------------------------------------------------------
+[1단계] 격리 환경 구성 및 대상 실행 (Terminal 1)
+--------------------------------------------------------------------------------
+$ cd ~/IoTGoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root
+$ sudo cp /usr/bin/qemu-arm-static ./usr/bin/
+$ sudo chroot . /usr/bin/qemu-arm-static /usr/bin/shellback
+(백도어 프로세스 실행 및 외부 접속 대기 상태 유지)
+
+--------------------------------------------------------------------------------
+[2단계] 기준 동작 확인 - 포트 개방 상태 기록 (Terminal 2)
+--------------------------------------------------------------------------------
+$ ss -tlpn | grep 5515
+LISTEN   0   1   0.0.0.0:5515   0.0.0.0:*
+
+--------------------------------------------------------------------------------
+[3단계-1] 기본 권한(root, uid=0) 원격 접속 검증 (Terminal 2)
+--------------------------------------------------------------------------------
+$ nc -v 127.0.0.1 5515
+Connection to 127.0.0.1 5515 port [tcp/*] succeeded!
+[***]Successfully Connected to IoTGoat's Backdoor[***]
+id
+uid=0(root) gid=0(root) groups=0(root)
+echo $?
+0
+ls /
+bin   dev   etc   lib   mnt   overlay  proc  rom   root  sbin  sys   tmp   usr   var   www
+cat /etc/passwd
+root:x:0:0:root:/root:/bin/ash
+daemon:*:1:1:daemon:/var:/bin/false
+ftp:*:55:55:ftp:/home/ftp:/bin/false
+network:*:101:101:network:/var:/bin/false
+nobody:*:65534:65534:nobody:/var:/bin/false
+
+--------------------------------------------------------------------------------
+[3단계-2] 최저 권한(nobody, uid=65534) 비교 검증 및 파일 권한 점검
+--------------------------------------------------------------------------------
+# Terminal 1 (권한 하향 실행)
+$ sudo pkill -9 qemu-arm-static
+$ sudo chroot --userspec=65534:65534 . /usr/bin/qemu-arm-static /usr/bin/shellback
+
+# Terminal 2 (접속 및 권한/파일 점검)
+$ nc -v 127.0.0.1 5515
+Connection to 127.0.0.1 5515 port [tcp/*] succeeded!
+[***]Successfully Connected to IoTGoat's Backdoor[***]
+id
+uid=65534(nobody) gid=65534(nogroup)
+echo $?
+0
+ls -l /etc/passwd /etc/shadow
+-rw-r--r-- 1 iotgoatu 1000 284 Jan 30 2019 /etc/passwd
+-rw-r--r-- 1 iotgoatu 1000 269 Jan 30 2019 /etc/shadow
+find / -perm -4000 2>/dev/null
+sh: can't create /dev/null: Permission denied
+find / -perm -4000
+(SUID 설정 바이너리 없음 확인)
+
+--------------------------------------------------------------------------------
+[4단계-1] GDB 원격 디버깅 연동 및 ARM 어셈블리 단계별 추적 (stepi)
+--------------------------------------------------------------------------------
+# Terminal 1 (디버깅 서버 모드로 실행)
+$ sudo pkill -9 qemu-arm-static
+$ sudo chroot . /usr/bin/qemu-arm-static -g 1234 /usr/bin/shellback
+
+# Terminal 2 (GDB 연결 및 함수/어셈블리 추적)
+$ gdb-multiarch -q ./usr/bin/shellback
+Reading symbols from ./usr/bin/shellback...
+(No debugging symbols found in ./usr/bin/shellback)
+(gdb) target remote :1234
+Remote debugging using :1234
+(gdb) b *0x10588
+Breakpoint 1 at 0x10588
+(gdb) b *0x1063c
+Breakpoint 2 at 0x1063c
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x00010588 in ?? ()
+
+# ARM 어셈블리 주요 명령어(x/i $pc, stepi, info registers, x/3wx) 확인 요약
+- LDR  : 첫 LDR 후 r3 = 0x10740 / 이후 LDR 후 r9 = 0x1074c (안내 문구 주소)
+- PUSH : r4~r10, lr (8개 레지스터, 32바이트) 스택 저장
+- SUB  : sub sp, sp, #48 -> sp 변화: 0x407fff48 -> 0x407fff18 (지역 공간 48바이트 확보)
+- LDM  : r3가 가리키는 메모리에서 3개 값 일괄 로드 -> r0, r1, r2
+- ADD  : add r6, sp, #4 -> r6 = 0x407fff1c (sp 유지)
+- MOV  : r5 = 2
+- STM  : LDM으로 읽은 3개 값을 r6 스택 공간에 연속 저장 (BusyBox 실행 인수 배열)
+
+--------------------------------------------------------------------------------
+[4단계-2] 주요 함수 호출별 레지스터 및 반환값(r0) 검증
+--------------------------------------------------------------------------------
+1) 네트워크 소켓 준비 및 연결 수락
+- htons()  : 호출 전후 r0 비교 -> 포트 번호 바이트 순서 변환(네트워크 바이트 순서 저장)
+- socket() : IPv4 TCP 소켓 생성 -> 반환값 r0 = 5 (FD 5, 대기용 소켓)
+- bind()   : FD 5에 로컬 주소/포트 할당 -> 반환값 r0 = 0 (성공)
+- listen() : FD 5 접속 대기 상태 전환 -> 반환값 r0 = 0 (성공)
+
+# Terminal 3 (외부 접속 트리거)
+$ nc -v 127.0.0.1 5515
+Connection to 127.0.0.1 5515 port [tcp/*] succeeded!
+
+- accept() : 외부 접속 수락 -> 반환값 r0 = 6 (FD 6, 클라이언트 통신용 소켓)
+
+2) 프로세스 분기 및 안내 문구 전송
+- fork()   : 부모 프로세스 반환값 r0 = 2948 (생성된 자식 PID)
+             cmp r0, #0 비교 시 0이 아니므로 beq 미분기, 다음 명령어로 진행
+- write()  : 안내 문구 길이 55바이트 지정 -> 반환값 r0 = 55 (FD 6에 전량 전송 완료)
+
+3) 표준 입출력 리다이렉션 (dup2)
+- dup2(6, 0) : 호출 전 r0=6, r1=0 -> 반환값 r0 = 0 (stdin  -> FD 6 연결)
+- dup2(6, 1) : 호출 전 r0=6, r1=1 -> 반환값 r0 = 1 (stdout -> FD 6 연결)
+- dup2(6, 2) : 호출 전 r0=6, r1=2 -> 반환값 r0 = 2 (stderr -> FD 6 연결)
+
+--------------------------------------------------------------------------------
+[4단계-3] execve() 호출 직전(0x1063c) 메모리 인자 검증 및 셸 응답 확인
+--------------------------------------------------------------------------------
+Breakpoint 2, 0x0001063c in ?? ()
+(gdb) info registers r0 r1
+r0             0x10718             67352
+r1             0x407fff1c          1082130204
+(gdb) x/s $r0
+0x10718: "/bin/busybox"
+(gdb) x/s *(char **)$r1
+0x10718: "/bin/busybox"
+(gdb) x/s *((char **)$r1 + 1)
+0x10725: "sh"
+(gdb) c
+Continuing.
+Remote connection closed
+
+# Terminal 3 (nc 창에서 시험 명령 실행 및 응답 확인)
+echo IOTGOAT_EXECVE_OK
+IOTGOAT_EXECVE_OK
+echo $?
+0
+
+
+================================================================================
+END OF LOGS
+================================================================================
