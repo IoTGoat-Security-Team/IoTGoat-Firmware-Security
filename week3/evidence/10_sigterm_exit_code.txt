@@ -1,0 +1,11 @@
+kanghyun@kanghyun-VirtualBox:~/iotgoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root$ sudo killall -9 qemu-arm-static 2>/dev/null
+cd ~/iotgoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root
+# 정상 종료 시그널(SIGTERM) 종료 코드 확인 -> 143 출력
+qemu-arm-static -L . ./usr/bin/shellback &
+PID=$!
+kill -15 $PID
+wait $PID
+echo "SIGTERM Exit Code: $?"
+[1] 37636
+[1]+  종료됨               qemu-arm-static -L . ./usr/bin/shellback
+SIGTERM Exit Code: 143

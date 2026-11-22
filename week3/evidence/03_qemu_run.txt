@@ -1,0 +1,2 @@
+kanghyun@kanghyun-VirtualBox:~$ cd ~/iotgoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root
+qemu-arm-static -L . ./usr/bin/shellback

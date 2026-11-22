@@ -1,0 +1,11 @@
+(gdb) x/10i $pc
+=> 0x3ffdd67c: mov   r11, #0
+   0x3ffdd680: mov   lr, #0
+   0x3ffdd684: ldr   r1, [pc, #16]   ; 0x3ffdd69c
+   0x3ffdd688: add   r1, pc, r1
+   0x3ffdd68c: mov   r0, sp
+   0x3ffdd690: bic   r12, r0, #15
+   0x3ffdd694: mov   sp, r12
+   0x3ffdd698: bl    0x3ffdd6a0
+   0x3ffdd69c: andeq pc, r1, r8, ror #17
+   0x3ffdd6a0: ldr   r3, [r0]

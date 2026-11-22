@@ -1,0 +1,7 @@
+kanghyun@kanghyun-VirtualBox:~$ ss -tlpn | grep 5515
+ps aux | grep shellback
+LISTEN 0      1            0.0.0.0:5515      0.0.0.0:*
+root     37480  0.0  0.1  15744   6060 pts/1  S+   16:08  0:00 sudo qemu-arm-static -L . ./usr/bin/shellback
+root     37481  0.0  0.1  15744   2432 pts/0  Ss   16:08  0:00 sudo qemu-arm-static -L . ./usr/bin/shellback
+root     37482  0.0  0.1  4405500 7928 pts/0  Sl+  16:08  0:00 qemu-arm-static -L . ./usr/bin/shellback
+kanghyun 37506  0.0  0.0  10544   2584 pts/2  S+   16:08  0:00 grep --color=auto shellback

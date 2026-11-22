@@ -1,0 +1,3 @@
+(gdb) info files
+Symbols from "/home/kanghyun/iotgoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root/usr/bin/shellback".
+Remote target using gdb-specific protocol:

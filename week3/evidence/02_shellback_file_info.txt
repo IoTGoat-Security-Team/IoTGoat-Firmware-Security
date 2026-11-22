@@ -1,0 +1,7 @@
+kanghyun@kanghyun-VirtualBox:~$ cd ~/iotgoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root
+file ./usr/bin/shellback
+ls -lh ./usr/bin/shellback
+strings ./usr/bin/shellback | grep -E "Backdoor|/bin/sh|5515"
+./usr/bin/shellback: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-armhf.so.1, no section header
+-rwxr-xr-x 1 kanghyun kanghyun 4.1K 1월 30 2019 ./usr/bin/shellback
+[***]Successfully Connected to IoTGoat's Backdoor[***]
