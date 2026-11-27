@@ -1,0 +1,1 @@
+kanghyun@kanghyun-VirtualBox:~/iotgoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root$ sudo chroot . ./qemu-arm-static /usr/bin/shellback

